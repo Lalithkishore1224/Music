@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: #0D0B1A;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .recently-played {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding-bottom: 15px;
+        }
+
+        .recently-played::-webkit-scrollbar {
+            display: none;
+        }
+
+        .player {
+            width: 100%;
+            height: 100vh;
+            background: #13122B;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .song-list {
+            margin-top: 20px;
+        }
+
+        .song {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .album {
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .album img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .song img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+        }
+
+        .song-info {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .song-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .artist {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .play-btn, .loop-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #8a2be2, #ff00ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            margin-left: 5px;
+        }
+
+        .loop-btn.active {
+            background: linear-gradient(45deg, #00ff00, #008000);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="player">
+        <div class="header">
+            <div class="profile">
+               <a href="https://www.instagram.com/lalith___lk?igsh=MTQxODFsZWxueWVvYQ==" style="text-decoration: none;"><img src="mad.jpeg" alt="Profile"> </a>
+                <div>
+                    <p><strong>That's Mine</strong></p>
+                    <p style="font-size: 12px; opacity: 0.7;">By Lalith</p>
+                </div>
+            </div>
+       
+        </div>
+
+        <h2>Recently Played</h2>
+        <div class="recently-played" id="recentlyPlayed">
+            <!-- Songs will be dynamically added here -->
+        </div>
+
+        <h2>Recommend for you</h2>
+        <div class="song-list">
+            <div class="song">
+                <img src="murugar.jpeg" alt="Take care of you">
+                <div class="song-info">
+                    <p class="song-title">murugar Vibe</p>
+                    <p class="artist">STR</p>
+                </div>
+                <button class="play-btn" onclick="togglePlay(this, 'song1')">▶</button>
+                <button class="loop-btn" onclick="toggleLoop(this, 'song1')">🔁</button>
+                <audio id="song1" src="murugar.mp3"></audio>
+            </div>
+            <div class="song">
+                <img src="soo.jpeg" alt="Sookshmadarshini">
+                <div class="song-info">
+                    <p class="song-title">Sookshmadarshini</p>
+                    <p class="artist">BGM</p>
+                </div>
+                <button class="play-btn" onclick="togglePlay(this, 'song2')">▶</button>
+                <button class="loop-btn" onclick="toggleLoop(this, 'song2')">🔁</button>
+                <audio id="song2" src="soo.mp3"></audio>
+            </div>
+            <div class="song">
+                <img src="ar.webp" alt="Edwall of beauty mind">
+                <div class="song-info">
+                    <p class="song-title">NadhiyeNadhiye</p>
+                    <p class="artist">A.R. Rahman</p>
+                </div>
+                <button class="play-btn" onclick="togglePlay(this, 'song3')">▶</button>
+                <button class="loop-btn" onclick="toggleLoop(this, 'song3')">🔁</button>
+                <audio id="song3" src="Ndhaya.mp3"></audio>
+            </div>
+            <div class="song">
+                <img src="ar.webp" alt="Edwall of beauty mind">
+                <div class="song-info">
+                    <p class="song-title">Katra en Vasal</p>
+                    <p class="artist">A.R. Rahman</p>
+                </div>
+                <button class="play-btn" onclick="togglePlay(this, 'song3')">▶</button>
+                <button class="loop-btn" onclick="toggleLoop(this, 'song3')">🔁</button>
+                <audio id="song3" src="Katre En Vasal with Lyrics  Rhythm  A R Rahman Hits  Arjun  Meena  Jyothika.mp3"></audio>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPlaying = null;
+
+        function togglePlay(button, songId) {
+            let audio = document.getElementById(songId);
+
+            // Stop the currently playing song if it's not the same
+            if (currentPlaying && currentPlaying !== audio) {
+                currentPlaying.pause();
+                currentPlaying.previousElementSibling.innerHTML = "▶";
+            }
+
+            if (audio.paused) {
+                audio.play();
+                button.innerHTML = "⏸";
+                currentPlaying = audio;
+                updateRecentlyPlayed(songId);
+            } else {
+                audio.pause();
+                button.innerHTML = "▶";
+                currentPlaying = null;
+            }
+        }
+
+        function toggleLoop(button, songId) {
+            let audio = document.getElementById(songId);
+            audio.loop = !audio.loop;
+            button.classList.toggle("active", audio.loop);
+        }
+
+        function updateRecentlyPlayed(songId) {
+            let audio = document.getElementById(songId);
+            let songTitle = audio.parentElement.querySelector(".song-title").innerText;
+            let songArtist = audio.parentElement.querySelector(".artist").innerText;
+            let songImg = audio.parentElement.querySelector("img").src;
+
+            let recentlyPlayedDiv = document.getElementById("recentlyPlayed");
+
+            // Check if song already exists in recently played
+            let existingSongs = recentlyPlayedDiv.querySelectorAll(".album p");
+            for (let song of existingSongs) {
+                if (song.innerText === songTitle) {
+                    return;
+                }
+            }
+
+            let newSongDiv = document.createElement("div");
+            newSongDiv.classList.add("album");
+            newSongDiv.innerHTML = `<img src="${songImg}" alt="${songTitle}"><p>${songTitle}</p>`;
+            newSongDiv.onclick = () => document.getElementById(songId).play();
+
+            recentlyPlayedDiv.prepend(newSongDiv);
+
+            // Keep only the latest 3
+            while (recentlyPlayedDiv.children.length > 3) {
+                recentlyPlayedDiv.removeChild(recentlyPlayedDiv.lastChild);
+            }
+        }
+    </script>
+
+</body>
+</html>
